@@ -140,7 +140,7 @@ def clean_links(file_name):
 
 
 #iterates over the newest 16 pages of comics
-for i in range(1,3):
+for i in range(1,25):
 	if i == 1:
 		index_page("https://getcomics.info")
 	
@@ -151,6 +151,7 @@ for i in range(1,3):
 		print("https://getcomics.info/page/"+str(i)+"/")
 		write_links(set_links)
 		clean_links(rawlinks)
+		set_links.clear()
 
 '''
 download("https://getcomics.info/other-comics/teenage-mutant-ninja-turtles-1-70-extras-archie/")
