@@ -117,7 +117,6 @@ def week_page(url):
 def write_links(linkset):
 	with open(rawlinks,"a") as dataFile:
 		for link in linkset:
-			print(link)
 			dataFile.write(link+'\n')
 	
 
@@ -140,7 +139,7 @@ def clean_links(file_name):
 
 
 #iterates over the newest 16 pages of comics
-for i in range(1,3):
+for i in range(1,4):
 	if i == 1:
 		index_page("https://getcomics.info")
 	
