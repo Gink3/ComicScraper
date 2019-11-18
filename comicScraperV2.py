@@ -138,21 +138,29 @@ def clean_links(file_name):
 						nl.write(raw)
 
 
-#iterates over the newest 16 pages of comics
-for i in range(1,4):
-	if i == 1:
-		index_page("https://getcomics.info")
-	
-	else:
-		#Sample url of the home page, 3
-		#https://getcomics.info/page/3/
-		index_page("https://getcomics.info/page/"+str(i)+"/")
-		print("https://getcomics.info/page/"+str(i)+"/")
-		write_links(set_links)
-		clean_links(rawlinks)
+def loadConfig():
+	return 0
 
-'''
-download("https://getcomics.info/other-comics/teenage-mutant-ninja-turtles-1-70-extras-archie/")
+
+
+
+furthest_page = 2
+base_url = "https://getcomics.info/"
+queary = "/"
+for i in range(1, furthest_page+1):
+	if i == 1:
+		index_page(base_url)
+		print("Done with:"+base_url)
+	else:
+		
+		#https://getcomics.info/page/3/
+		#https://getcomics.info/page/3/
+		url = base_url+"page/"+str(i)+queary
+		index_page(url)
+		print("Done with: "+url)
+
+
 write_links(set_links)
 clean_links(rawlinks)
-'''
+set_links.clear()
+
