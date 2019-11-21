@@ -103,6 +103,7 @@ def write_links(linkset):
 	
 
 
+<<<<<<< HEAD
 
 n = 11
 #iterates over the newest n pages of comics
@@ -116,9 +117,43 @@ for i in range(1,n):
 		print(url)
 		index_page(url)
 
+=======
+def clean_links(file_name):
+	# compares raw links to see if contained in linklist file
+	with open(newlinks,"w+") as nl:
+		with open(rawlinks,'r') as rl:
+			for raw in rl:
+				with open(linklist,"a+") as links:
+					found = False;
+					for line in links:
+						if line == raw:
+							found = True
+					if found:
+						pass
+					else:
+						links.write(raw)
+						nl.write(raw)
+
+
+def loadConfig():
+	return 0
+
+
+
+
+furthest_page = 2
+base_url = "https://getcomics.info/"
+queary = "/"
+for i in range(1, furthest_page+1):
+	if i == 1:
+		index_page(base_url)
+		print("Done with:"+base_url)
+>>>>>>> c7b42c5986f3b801c0afa73bd8210ac76d482a25
 	else:
-		#Sample url of the home page, 3
+		
 		#https://getcomics.info/page/3/
+		#https://getcomics.info/page/3/
+<<<<<<< HEAD
 		url = "https://getcomics.info/page/"+str(i)+query
 		print(url)
 		index_page(url)	
@@ -126,3 +161,14 @@ for i in range(1,n):
 	set_links.clear()
 
 
+=======
+		url = base_url+"page/"+str(i)+queary
+		index_page(url)
+		print("Done with: "+url)
+
+
+write_links(set_links)
+clean_links(rawlinks)
+set_links.clear()
+
+>>>>>>> c7b42c5986f3b801c0afa73bd8210ac76d482a25
