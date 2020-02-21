@@ -1,10 +1,13 @@
 # ComicScraper
 
+Bulk Comic Book Downloader for getcomics.info
+Downloaded as a cbr file
 
-A line in the output file (links.txt) is the link and the name of the comic seperated by a space.
-`source mods/bin/activate
-python3 comicScraperV2.py`
+TO RUN:
+`./comics.sh`
 
-Use in combination with the bash script ComicGet.sh to download the comics and be renamed
-`ComicGet.sh < links.txt`
-Will retrieve download links from the home page up to a certain page
+Downloads the newest n pages for getcomics.info
+n is set on line 123
+and if you want to search assign `/?s={Your_search}` to the query variable on line 127 
+
+
