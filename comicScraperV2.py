@@ -28,7 +28,7 @@ from bs4 import BeautifulSoup
 import os.path
 import os
 
-rawlinks = "links.dat"
+rawlinks = "links.txt"
 set_links = set()
 
 
@@ -38,6 +38,7 @@ def index_page(url):
 	#	Grabs index page
 	#	Filters each link to a page
 	#	to the appropriate function
+	print("Index Page")
 	response = requests.get(url)
 	data = response.text
 	soup = BeautifulSoup(data,'html.parser')
@@ -59,10 +60,10 @@ def get_link(url):
 	#	collection page passes
 	#	a soup to either red or collection
 	#	functions
-
 	response = requests.get(url)
 	data = response.text
 	soup = BeautifulSoup(data,'html.parser')
+	titlesoup = soup
 	testtag = soup.find('a',{'title':'Download Now'})
 	if testtag == None:
 		tags = soup.findAll('a',{'rel':'noopener noreferrer'})
@@ -72,13 +73,27 @@ def get_link(url):
 			#print(type(span))
 			if span != None:
 				if span.text == "Main Server":
-					set_links.add(tag.get('href'))
+					link = tag.get('href')
+					title = titlesoup.find('section',{'class':'post-contents'}).h2
+					titletext = title.text
+					titletext = titletext.replace("The Story – ", "")
+					titletext = titletext.replace(" ","_")
+					set_links.add(link + " " + titletext)
+					print(titletext)			
 	else:
-		set_links.add(testtag.get('href'))
+		link = testtag.get('href')
+		title = titlesoup.find('section',{'class':'post-contents'}).h2
+		titletext = title.text
+		titletext = titletext.replace("The Story – ","")
+		titletext = titletext.replace(" ","_")
+		set_links.add(link + " " + titletext)
+		print(titletext)
+		
 
 
 
 def week_page(url):
+	print("Week Page")
 	#	New request
 	#	New Soup
 	#	Grab each link
@@ -97,19 +112,19 @@ def week_page(url):
 
 
 def write_links(linkset):
+	print("Writing links")
 	with open(rawlinks,"a+") as dataFile:
 		for link in linkset:
 			dataFile.write(link+'\n')
 	
 
 
-<<<<<<< HEAD
 
-n = 11
-#iterates over the newest n pages of comics
+n = 2
+#iterates over the newest n pages of comics (minimum 2)
 
 base_url = "https://getcomics.info"
-query = "/?s=deathstroke"
+query = ""
 for i in range(1,n):
 	if i == 1:
 		
@@ -117,43 +132,10 @@ for i in range(1,n):
 		print(url)
 		index_page(url)
 
-=======
-def clean_links(file_name):
-	# compares raw links to see if contained in linklist file
-	with open(newlinks,"w+") as nl:
-		with open(rawlinks,'r') as rl:
-			for raw in rl:
-				with open(linklist,"a+") as links:
-					found = False;
-					for line in links:
-						if line == raw:
-							found = True
-					if found:
-						pass
-					else:
-						links.write(raw)
-						nl.write(raw)
-
-
-def loadConfig():
-	return 0
-
-
-
-
-furthest_page = 2
-base_url = "https://getcomics.info/"
-queary = "/"
-for i in range(1, furthest_page+1):
-	if i == 1:
-		index_page(base_url)
-		print("Done with:"+base_url)
->>>>>>> c7b42c5986f3b801c0afa73bd8210ac76d482a25
 	else:
 		
 		#https://getcomics.info/page/3/
 		#https://getcomics.info/page/3/
-<<<<<<< HEAD
 		url = "https://getcomics.info/page/"+str(i)+query
 		print(url)
 		index_page(url)	
@@ -161,14 +143,3 @@ for i in range(1, furthest_page+1):
 	set_links.clear()
 
 
-=======
-		url = base_url+"page/"+str(i)+queary
-		index_page(url)
-		print("Done with: "+url)
-
-
-write_links(set_links)
-clean_links(rawlinks)
-set_links.clear()
-
->>>>>>> c7b42c5986f3b801c0afa73bd8210ac76d482a25
