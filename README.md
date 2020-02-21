@@ -8,6 +8,6 @@ TO RUN:
 
 Downloads the newest n pages for getcomics.info
 n is set on line 123
-and if you want to search assign `/?s={Your_search}` to the query variable on line 127 
-
+If you want to search assign `/?s=Yoursearch` to the query variable on line 127 
+NOTE: replace any spaces in the search with a +
 
