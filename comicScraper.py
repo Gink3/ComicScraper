@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 '''
 	Taylor King
 	telltaylor13@gmail.com
@@ -29,9 +31,35 @@ from bs4 import BeautifulSoup
 import os.path
 import os
 import sys
+import argparse
 
 rawlinks = "links.txt"
 set_links = set()
+query = ""
+debug = 0
+
+parser = argparse.ArgumentParser (
+        prog = 'ComicScraper' )
+
+parser.add_argument( '-q', '--query' )
+parser.add_argument( '-s', '--start-page', type=int, default=1 )
+parser.add_argument( '-n', '--num-pages', type=int, default=1 )
+parser.add_argument( '-w', '--write-links', action='store_true' )
+parser.add_argument( '-a', '--append-links', action='store_true' )
+parser.add_argument( '-o', '--output' )
+parser.add_argument( '-d', '--debug', action='store_true' )
+
+args = parser.parse_args()
+
+if args.query:
+	query = "/?s=" + urllib.parse.quote_plus(args.query)
+	
+if args.output:
+	rawlinks = args.output
+
+if args.debug:
+	debug = 1
+
 
 def index_page(url):
 	#	Grabs index page
@@ -45,7 +73,7 @@ def index_page(url):
 		tags = info.findAll('a')
 		for tag in tags:
 			href_value = tag.get('href')
-			#print(href_value)
+			if debug: print(href_value)
 			if "week" in href_value:
 				week_page(href_value)
 			else:
@@ -66,29 +94,29 @@ def get_link(url):
 	if testtag == None:
 		tags = soup.findAll('a',{'rel':'noopener noreferrer'})
 		for tag in tags:
-			#print(tag)
+			if debug: print(tag)
 			span = tag.find('span')
-			#print(type(span))
+			if debug: print(type(span))
 			if span != None:
 				if span.text == "Main Server":
 					link = tag.get('href')
 					title = titlesoup.find('section',{'class':'post-contents'}).h2
 					titletext = title.text
 					titletext = titletext.replace("The Story – ", "")
+					statustext = titletext
 					titletext = titletext.replace(" ","_")
 					set_links.add(link + " " + titletext)
-					print(titletext)			
+					print(statustext)
 	else:
 		link = testtag.get('href')
 		title = titlesoup.find('section',{'class':'post-contents'}).h2
 		titletext = title.text
 		titletext = titletext.replace("The Story – ","")
+		statustext = titletext
 		titletext = titletext.replace(" ","_")
 		set_links.add(link + " " + titletext)
-		print(titletext.replace('_',' '))
+		print(statustext)
 		
-
-
 
 def week_page(url):
 	print("Week Page")
@@ -107,40 +135,24 @@ def week_page(url):
 			pass
 
 
-
-
 def write_links(linkset):
-	print("Writing links")
-	with open(rawlinks,"a+") as dataFile:
-		for link in linkset:
-			dataFile.write(link+'\n')
-	
-l = len(sys.argv)
+	if args.write_links or args.append_links:
+		print("Writing links")
+		if args.append_links: mode = "a+"
+		if args.write_links: mode = "w+"
+		with open(rawlinks,mode) as dataFile:
+			for link in linkset:
+				dataFile.write(link+'\n')
+			
 
-query = ""
-n = 1
-
-if l > 3:
-	exit
-
-if l > 2:
-	query = "/?s=" + urllib.parse.quote_plus(sys.argv[2])
-	
-if l > 1:
-	n = int(sys.argv[1])
-	
-#iterates over the newest n pages of comics (minimum 2)
-
-for i in range(1,n+1):
+for i in range(args.start_page,args.start_page + args.num_pages):
 	if i == 1:
 		url = "https://getcomics.info"+query
-#		print(url)
+		if debug: print(url)
 		index_page(url)
 	else:
 		url = "https://getcomics.info/page/"+str(i)+query
-#		print(url)
+		if debug: print(url)
 		index_page(url)	
 	write_links(set_links)
 	set_links.clear()
-
-
