@@ -138,12 +138,13 @@ def week_page(url):
 def write_links(linkset):
 	if args.write_links or args.append_links:
 		print("Writing links")
-		if args.append_links: mode = "a+"
-		if args.write_links: mode = "w+"
-		with open(rawlinks,mode) as dataFile:
+		with open(rawlinks,"a+") as dataFile:
 			for link in linkset:
 				dataFile.write(link+'\n')
-			
+	
+				
+if args.write_links and not args.append_links: 
+	open( rawlinks, "w" )
 
 for i in range(args.start_page,args.start_page + args.num_pages):
 	if i == 1:
