@@ -23,22 +23,20 @@
 '''
 import requests
 import urllib.request
+import urllib.parse
 import time
 from bs4 import BeautifulSoup
 import os.path
 import os
+import sys
 
 rawlinks = "links.txt"
 set_links = set()
-
-
-
 
 def index_page(url):
 	#	Grabs index page
 	#	Filters each link to a page
 	#	to the appropriate function
-	print("Index Page")
 	response = requests.get(url)
 	data = response.text
 	soup = BeautifulSoup(data,'html.parser')
@@ -87,7 +85,7 @@ def get_link(url):
 		titletext = titletext.replace("The Story – ","")
 		titletext = titletext.replace(" ","_")
 		set_links.add(link + " " + titletext)
-		print(titletext)
+		print(titletext.replace('_',' '))
 		
 
 
@@ -117,27 +115,30 @@ def write_links(linkset):
 		for link in linkset:
 			dataFile.write(link+'\n')
 	
+l = len(sys.argv)
 
+query = ""
+n = 1
 
+if l > 3:
+	exit
 
-n = 2
+if l > 2:
+	query = "/?s=" + urllib.parse.quote_plus(sys.argv[2])
+	
+if l > 1:
+	n = int(sys.argv[1])
+	
 #iterates over the newest n pages of comics (minimum 2)
 
-base_url = "https://getcomics.info"
-query = ""
-for i in range(1,n):
+for i in range(1,n+1):
 	if i == 1:
-		
-		url = base_url + query
-		print(url)
+		url = "https://getcomics.info"+query
+#		print(url)
 		index_page(url)
-
 	else:
-		
-		#https://getcomics.info/page/3/
-		#https://getcomics.info/page/3/
 		url = "https://getcomics.info/page/"+str(i)+query
-		print(url)
+#		print(url)
 		index_page(url)	
 	write_links(set_links)
 	set_links.clear()
